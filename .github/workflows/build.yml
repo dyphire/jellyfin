@@ -1,0 +1,31 @@
+name: Build Jellyfin Windows + Web UI
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  build-windows:
+    name: Build Jellyfin Windows Server
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore Jellyfin.Server
+
+      - name: Build Jellyfin Windows Release
+        run: dotnet build
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: jellyfin-windows
+          path: Jellyfin.Server/bin/
